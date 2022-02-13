@@ -1,0 +1,87 @@
+<!doctype html>
+<title>Vivino</title>
+<body style="margin: 30px; font-size:16px; font-family: Tahoma;">
+<style>
+	input {
+		font-size:16px;
+	}
+</style>
+
+<style>
+#wines {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 80%;
+}
+
+#wines td, #wines th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#wines tr:nth-child(even){background-color: #f2f2f2;}
+
+#wines tr:hover {background-color: #ddd;}
+
+#wines th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #04AA6D;
+  color: white;
+}
+</style>
+
+<h2>Podaj URL do wina w serwisie Vivino</h2>
+<p>Przykładowe linki:</p>
+<ul>
+	<li>https://www.vivino.com/US-CA/en/las-mulas-reserva-carmenere/w/1623319</li>
+	<li>https://www.vivino.com/US-CA/en/merlot-cabernet/w/16118</li>
+	<li>https://www.vivino.com/US-CA/en/colheita-branco/w/6059442</li>
+</ul>
+<p>
+	{% with messages = get_flashed_messages() %}
+	  {% if messages %}
+		{% for message in messages %}
+			<span style="color: red;">{{ message }}</span>
+		{% endfor %}
+		<p></p>
+	  {% endif %}
+	{% endwith %}
+</p>
+<form method="post" action="/" >
+    <dl>
+		<p>
+			<input type="text"  size="100" name="wine" value="{{ wine_url }}" autocomplete="off">
+		</p>
+    </dl>
+    <p>
+		<input type="submit" value="Pokaż sugerowane wina">
+		&nbsp;&nbsp;
+		<input type="button" value="Wylosuj wino" onclick="location.href='/?rnd=1';" >
+	</p>
+</form>
+
+<table id="wines">
+
+	{% for wine in wines %}
+
+		{% if loop.first %}
+			<tr><td colspan="5"><b>Znalezione wino</b></td></tr>
+		{% endif %}
+
+		<tr>
+			<td><a target="vivino" href="{{ wine.url }}">{{ wine.name }}</a></td>
+			<td>{{ wine.country }}</td>
+			<td>{{ wine.region_fullname }}</td>
+			<td>{{ wine.winary_fullname }}</td>
+			<td><img align="absmiddle" src="{{ wine.bottle_url }}" height="150" border="0" /></td>
+		</tr>
+
+		{% if loop.first %}
+			<tr><td colspan="5"><b>Polecane wina</b></td></tr>
+		{% endif %}
+	{% endfor %}
+
+</table>
+</body>
